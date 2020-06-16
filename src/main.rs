@@ -166,6 +166,7 @@ fn read_qname(&mut self, outstr: &mut String ) -> Result<()>
             //and append to output buffer
 
             let str_buffer = try!(self.get_range(pos, len as usize));
+            
         }
     }
 }
