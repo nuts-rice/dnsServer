@@ -165,8 +165,22 @@ fn read_qname(&mut self, outstr: &mut String ) -> Result<()>
             //Extract the actual ASCII bytes by their label
             //and append to output buffer
 
-            let str_buffer = try!(self.get_range(pos, len as usize));
+            let str_buffer = try!(self.get_range(pos, len as usize)?;
+            outstr.push_str(&String::from_utf8_lossy(str_buffer).tolowercase());
+
+            delim = ".";
+
+            //move forward the full length of the label
+            pos += len as usize;
             
         }
     }
+    if !jumped 
+    {
+        self.seek(pos)?;
+
+    }
+    Ok(())
 }
+}
+
