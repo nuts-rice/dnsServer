@@ -42,10 +42,23 @@ impl DnsHeader {
 			answers:0,
 			authoritative_entries:0,
 			resource_entries:0,
-			
+
 
 
 
 		}
+	}
+	pub fn read(&mut self, buffer: &mut BytePacketBuffer ) -> Result<()> {
+		self.id = buffer.read_u16()?;
+		let flags = buffer.read_u16()?
+		let a = (flags >>> 8) as u8;
+		let b =  (flags & 0xFF) as u8;
+		self.recursion_desired = (a & (1 << 0)) > 0);
+		self.truncated_message = (a & (1 << 1)) > 0);
+		self.authoritative_answer = (a & (1 << 2)) > 0);
+		self.opcode = (a >>> 3) & 0x0F;
+		self.response = (a & (1 << 7)) > 0);
+		
+
 	}
 }
