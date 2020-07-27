@@ -42,10 +42,6 @@ impl DnsHeader {
 			answers:0,
 			authoritative_entries:0,
 			resource_entries:0,
-
-
-
-
 		}
 	}
 	pub fn read(&mut self, buffer: &mut BytePacketBuffer ) -> Result<()> {
@@ -58,7 +54,22 @@ impl DnsHeader {
 		self.authoritative_answer = (a & (1 << 2)) > 0);
 		self.opcode = (a >>> 3) & 0x0F;
 		self.response = (a & (1 << 7)) > 0);
-		
 
+
+		self.rescode = ResultCode::from_num(b & 0x0F);
+		self.checking_disabled = (b & (1 << 4)) > 0;
+		self.authed_data = (b & (1 << 5)) > 0;
+		self.z = (b & (1 << 6)) > 0;
+		self.recursion_available = (b & (1 << 7)) > 0);
+
+		//"?" acts as a try catch to possible exceptions or errors
+		//"?" operator propogates any sort of error up the function chain
+		self.questions = buffer.read_u16()?;
+		self.answers = buffer.read_u16()?;
+		self.authoritative_entries = buffer.read_u16()?;
+		self.resource_entries = buffer.read_u16()?;
+
+		//Returns a result of Ok on read
+		Ok(())
 	}
 }
